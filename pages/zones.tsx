@@ -50,7 +50,6 @@ const Zones: NextPage = () => {
   async function onClickDeleteZone(id: string) {
     const [ok, err] = await deleteZone(id);
     if (!ok) {
-      console.log(err);
       setAlertData({
         visible: true,
         color: "danger",

@@ -31,15 +31,11 @@ export default async (
     switch (req.method) {
       case "POST":
         try {
-          console.log(req.body);
           const data = postZoneSchema.parse(req.body);
-          console.log(req.body);
           try {
             const test = await Zone.create(data);
-            console.log("HERE");
             res.status(200).json({ message: "OK" });
           } catch (e) {
-            console.log(e);
             res.status(400).json({ message: "Error", error: e });
           }
         } catch (e) {
@@ -57,7 +53,7 @@ export default async (
 
           try {
             const z = await Zone.findById(data.id);
-            if (z) res.status(200).json({ zones: z });
+            if (z) res.status(200).json({ zones: [z] });
             else res.status(400).json({ message: "Not found" });
           } catch (e) {
             res.status(400).json({ message: "Error", error: e });
@@ -114,7 +110,6 @@ export default async (
                 }
               } catch (e) {
                 res.status(400).json({ message: "Error", error: e });
-                console.log(e);
               }
             } else res.status(400).json({ message: "Not found" });
           } catch (e) {

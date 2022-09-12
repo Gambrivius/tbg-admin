@@ -36,8 +36,8 @@ export function Header() {
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="me-auto">
           <NavDropdown title="Builder" id="collasible-nav-dropdown">
-            <NavDropdown.Item href="zones">Zones</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.1">Rooms</NavDropdown.Item>
+            <NavDropdown.Item href="/zones">Zones</NavDropdown.Item>
+            <NavDropdown.Item href="/builder/rooms">Rooms</NavDropdown.Item>
           </NavDropdown>
         </Nav>
         <Nav>
