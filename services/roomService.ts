@@ -1,6 +1,22 @@
 import axios, { AxiosError } from "axios";
 import { IRoom } from "../models/room";
 
+export function ReverseDir(direction: string) {
+  switch (direction) {
+    case "North":
+      return "South";
+    case "South":
+      return "North";
+    case "East":
+      return "West";
+    case "West":
+      return "East";
+    default:
+      return "";
+  }
+  return "";
+}
+
 export async function getAllRooms(): Promise<any> {
   try {
     const response = await axios.get("/api/room");
@@ -30,6 +46,7 @@ export async function addRoom(room: IRoom): Promise<boolean> {
 }
 
 export async function getRoom(id: string): Promise<IRoom | null> {
+  if (!id) return null;
   try {
     const response = await axios.get("/api/room?id=" + id);
     return response.data.rooms[0];

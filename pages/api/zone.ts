@@ -8,7 +8,7 @@ import { getSession } from "next-auth/react";
 import { z } from "zod";
 
 const postZoneSchema = z.object({
-  name: z.string().min(1).max(15),
+  name: z.string().min(1).max(40),
 });
 
 const zoneIdSchema = z.object({

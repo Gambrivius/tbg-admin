@@ -7,12 +7,14 @@ import Alert from "react-bootstrap/Alert";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import { RoomSelector } from "./roomSelector";
 import { IRoom } from "../models/room";
 import { useState } from "react";
 interface ExitBuildProps {
   room: IRoom;
-  onSubmit: (name: string, destinationId: string) => void;
+  onSubmit: (name: string, destinationId: string, symmetrical: boolean) => void;
 }
 
 export function ExitBuilder(props: ExitBuildProps) {
@@ -26,6 +28,7 @@ export function ExitBuilder(props: ExitBuildProps) {
 
     exitDestination: "",
   });
+  const [symmetricalChecked, setSymmetricalChecked] = useState(true);
   const [exitName, setExitName] = useState("");
   const [selectedRoom, setSelectedRoom] = useState({
     valid: false,
@@ -65,7 +68,7 @@ export function ExitBuilder(props: ExitBuildProps) {
       });
       return;
     }
-    props.onSubmit(exitName, selectedRoom.roomId);
+    props.onSubmit(exitName, selectedRoom.roomId, symmetricalChecked);
     setAlertState({
       show: false,
       title: "",
@@ -121,6 +124,28 @@ export function ExitBuilder(props: ExitBuildProps) {
                 setSelectedRoom({ valid, roomId });
               }}
             />
+            <input
+              type="checkbox"
+              id="topping"
+              name="topping"
+              value="Symmetrical"
+              checked={symmetricalChecked}
+              onChange={() => {
+                setSymmetricalChecked(!symmetricalChecked);
+              }}
+            />
+            <OverlayTrigger
+              overlay={
+                <Tooltip id="tooltip">
+                  Attempt to create an exit in the destination room in the
+                  reverse direction back to the source room. Requires standard
+                  exits.
+                </Tooltip>
+              }
+            >
+              <span className="d-inline-block">Symmetrical</span>
+            </OverlayTrigger>
+            <br />
             <ButtonGroup className="mb-3">
               <Button variant="primary" type="button" onClick={addExit}>
                 Add

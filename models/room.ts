@@ -1,5 +1,13 @@
 import { Schema, model, models } from "mongoose";
 
+export enum Direction {
+  Error = "Error",
+  North = "North",
+  South = "South",
+  East = "East",
+  West = "West",
+}
+
 // 1. Create an interface representing a document in MongoDB.
 export interface IRoom {
   name: string;
