@@ -1,4 +1,5 @@
 import { Schema, model, models } from "mongoose";
+import { IObject } from "./object";
 
 export enum Direction {
   Error = "Error",
@@ -9,12 +10,12 @@ export enum Direction {
 }
 
 // 1. Create an interface representing a document in MongoDB.
-export interface IRoom {
+export interface IRoom extends IObject {
   name: string;
   description: string;
   zone: string;
   exits: { direction: string; destination: string }[];
-  _id?: string;
+  _id: string;
 }
 
 // 2. Create a Schema corresponding to the document interface.

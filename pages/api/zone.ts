@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import connectMongo from "../../lib/mongo";
 import Zone from "../../models/zone";
-import IZone from "../../models/zone";
+import { IZone, APIZoneResponse } from "../../models/zone";
 import Room from "../../models/room";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
@@ -15,15 +15,9 @@ const zoneIdSchema = z.object({
   id: z.string().length(24),
 });
 
-type ResponseData = {
-  message?: string;
-  error?: any;
-  zones?: typeof IZone[];
-};
-
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<APIZoneResponse>
 ) => {
   const session = await getSession({ req });
   if (session && session.user.roles && session.user.roles.includes("builder")) {
@@ -45,7 +39,7 @@ export default async (
       case "GET":
         if (!req.query.id) {
           const z = await Zone.find({});
-          if (z) res.status(200).json({ zones: z });
+          if (z) res.status(200).json({ data: z });
           return;
         }
         try {
@@ -53,7 +47,7 @@ export default async (
 
           try {
             const z = await Zone.findById(data.id);
-            if (z) res.status(200).json({ zones: [z] });
+            if (z) res.status(200).json({ data: [z] });
             else res.status(400).json({ message: "Not found" });
           } catch (e) {
             res.status(400).json({ message: "Error", error: e });

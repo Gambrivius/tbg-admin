@@ -38,6 +38,9 @@ export function Header() {
           <NavDropdown title="Builder" id="collasible-nav-dropdown">
             <NavDropdown.Item href="/zones">Zones</NavDropdown.Item>
             <NavDropdown.Item href="/builder/rooms">Rooms</NavDropdown.Item>
+            <NavDropdown.Item href="/builder/story">
+              Story Objects
+            </NavDropdown.Item>
           </NavDropdown>
         </Nav>
         <Nav>

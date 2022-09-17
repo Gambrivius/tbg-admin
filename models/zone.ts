@@ -12,6 +12,13 @@ export interface IZoneResponse {
   zones: IZone[] | null;
   error: any | null;
 }
+
+export type APIZoneResponse = {
+  message?: string;
+  error?: any;
+  data?: IZone[];
+};
+
 // 2. Create a Schema corresponding to the document interface.
 export const zoneSchema = new Schema<IZone>({
   name: { type: String, required: true },

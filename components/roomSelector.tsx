@@ -5,7 +5,7 @@ import ButtonDropdown from "react-bootstrap/ButtonDropdown";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
 import { IRoom, IRoomResponse } from "../models/room";
-import { IZone, IZoneResponse } from "../models/zone";
+import { IZone, APIZoneResponse } from "../models/zone";
 import { getAllZones, getZone } from "../services/zoneService";
 import { getRoomsInZone, getRoom } from "../services/roomService";
 import { useState } from "react";
@@ -23,7 +23,7 @@ export function RoomSelector(props: RoomSelectorProps) {
   const [message, setMessage] = useState("");
 
   const rooms = useSWR<IRoomResponse, Error>(selectedZone._id, getRoomsInZone);
-  const zones = useSWR<IZoneResponse, Error>("/api/zone", getAllZones);
+  const zones = useSWR<APIZoneResponse, Error>("/api/zone", getAllZones);
 
   async function selectRoom(room: IRoom) {
     if (room) {
@@ -72,7 +72,7 @@ export function RoomSelector(props: RoomSelectorProps) {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              {zones?.data?.zones.map((zone: IZone) => (
+              {zones.data?.data?.map((zone: IZone) => (
                 <Dropdown.Item
                   key={zone._id}
                   onClick={() => {

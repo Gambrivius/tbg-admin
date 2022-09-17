@@ -1,13 +1,9 @@
 import axios, { AxiosError } from "axios";
-import { IZone, IZoneResponse } from "../models/zone";
+import { IZone, APIZoneResponse } from "../models/zone";
 
-export async function getAllZones(): Promise<any> {
-  try {
-    const response = await axios.get("/api/zone");
-    return { zones: response.data.zones, success: true };
-  } catch (e) {
-    return { zones: [], success: false };
-  }
+export async function getAllZones(): Promise<APIZoneResponse> {
+  const response = await axios.get("/api/zone");
+  return response.data;
 }
 
 export async function addZone(zone: IZone): Promise<boolean> {
@@ -23,7 +19,7 @@ export async function getZone(url: string, id: string): Promise<IZone | null> {
   if (!id) return null;
   try {
     const response = await axios.get(`${url}?id=${id}`);
-    return response.data.zones[0];
+    return response.data.data[0];
   } catch (error: any) {
     console.log(error);
   }

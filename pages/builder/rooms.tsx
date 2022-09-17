@@ -8,9 +8,8 @@ import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
 import { IRoom, IRoomResponse } from "../../models/room";
-import ReverseTestlol from "../../models/room";
 import useSWR from "swr";
-import { IZone, IZoneResponse } from "../../models/zone";
+import { IZone, APIZoneResponse } from "../../models/zone";
 import { getAllZones, getZone } from "../../services/zoneService";
 import {
   getAllRooms,
@@ -21,36 +20,10 @@ import {
   deleteRoom,
   ReverseDir,
 } from "../../services/roomService";
-import { RoomList } from "../../components/roomList";
+import { ObjectList } from "../../components/objectList";
 import { ExitBuilder } from "../../components/exitBuilder";
 import styles from "../../styles/rooms.module.css";
-import room from "../api/room";
-
-function SelectZoneView(props) {
-  return (
-    <>
-      <h4>Please select a zone to build:</h4>
-      <Table className="table-hover">
-        <thead>
-          <tr>
-            <th>Zone ID</th>
-            <th>Zone Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {props?.zones?.map((zone: IZone) => (
-            <tr key={zone._id}>
-              <td>{zone._id}</td>
-              <td>
-                <a href={"?zone=" + zone._id}>{zone.name}</a>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </>
-  );
-}
+import ZoneSelector from "../../components/zoneSelector";
 
 function Rooms() {
   const { query } = useRouter();
@@ -58,9 +31,11 @@ function Rooms() {
 
   const allRooms = useSWR<IRoomResponse, Error>("/api/room", getAllRooms);
   const rooms = useSWR<IRoomResponse, Error>(zoneId, getRoomsInZone);
-  const zones = useSWR<IZoneResponse, Error>("/api/zone", getAllZones);
+  const zonesSwr = useSWR<APIZoneResponse>("/api/zone", getAllZones);
+  const zones: IZone[] = zonesSwr.data?.data || [];
 
   const zoneData = useSWR<IZone | null, Error>(["/api/zone", zoneId], getZone);
+  console.log(zoneData);
   const [roomId, setRoomId] = useState("");
   //const roomData = useSWR<IRoom | null, Error>(roomId, getRoom(roomId));
   const [newRoomName, setNewRoomName] = useState("");
@@ -154,7 +129,7 @@ function Rooms() {
   return (
     <div>
       {!query.zone ? (
-        SelectZoneView(zones.data)
+        ZoneSelector(zones)
       ) : (
         <div className={styles.panels}>
           <div className={styles.leftPanel}>
@@ -180,10 +155,11 @@ function Rooms() {
               </Form>
             </div>
             <div className={styles.roomsList}>
-              <RoomList
-                rooms={rooms.data?.rooms || []}
-                onClickRoom={selectRoom}
-                selectedRoom={roomId}
+              <ObjectList
+                header="Rooms"
+                objects={rooms.data?.rooms || []}
+                onSelect={selectRoom}
+                selected={roomId}
               />
             </div>
           </div>

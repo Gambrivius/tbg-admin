@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Alert from "react-bootstrap/Alert";
-import { IZone, IZoneResponse } from "../models/zone";
+import { IZone, APIZoneResponse } from "../models/zone";
 import { getAllZones, addZone, deleteZone } from "../services/zoneService";
 import useSWR from "swr";
 
@@ -16,7 +16,7 @@ interface IAlertData {
   color: string;
 }
 const Zones: NextPage = () => {
-  const { isValidating, data, error, mutate } = useSWR<IZoneResponse, Error>(
+  const { isValidating, data, error, mutate } = useSWR<APIZoneResponse, Error>(
     "/api/zone",
     getAllZones
   );
@@ -76,7 +76,7 @@ const Zones: NextPage = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.zones?.map((zone: IZone) => (
+            {data?.data?.map((zone: IZone) => (
               <tr key={zone._id}>
                 <td>{zone._id}</td>
                 <td>{zone.name}</td>
