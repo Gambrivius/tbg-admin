@@ -12,6 +12,7 @@ export interface IStoryOutcome {
   weight: number;
   story_text: IStoryText;
   category: string;
+  _id: string;
 }
 
 export interface IStoryTextObject extends IObject {
@@ -19,6 +20,7 @@ export interface IStoryTextObject extends IObject {
   description: string;
   zone: string;
   outcomes: IStoryOutcome[];
+  _id?: string;
 }
 
 const storyTextSchema = new Schema<IStoryTextObject>({
@@ -33,6 +35,7 @@ const storyTextSchema = new Schema<IStoryTextObject>({
         actor_message: String,
         subject_message: String,
         room_message: String,
+        _id: Schema.Types.ObjectId,
       },
     },
   ],
@@ -65,6 +68,7 @@ export const zStoryTextSchema = z.object({
         actor_message: z.string(),
         subject_message: z.string(),
         room_message: z.string(),
+        _id: z.string().length(24),
       }),
     })
   ),

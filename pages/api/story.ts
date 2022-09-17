@@ -68,6 +68,7 @@ async function handleDelete(
         try {
           await StoryText.findByIdAndDelete(id);
           res.status(200).json({ message: "OK" });
+          return;
         } catch (e) {
           res.status(400).json({ message: "Error", error: e });
         }

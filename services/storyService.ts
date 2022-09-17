@@ -38,3 +38,31 @@ export async function addStory(story: IStoryTextObject): Promise<boolean> {
     return false;
   }
 }
+
+export async function updateStory(
+  id: string,
+  story: IStoryTextObject
+): Promise<boolean> {
+  try {
+    const response = await axios.put("/api/story?id=" + id, story);
+
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+export async function deleteStory(
+  id: string
+): Promise<[ok: boolean, err: Error | null]> {
+  try {
+    await axios.delete("/api/story?id=" + id);
+    return [true, null];
+  } catch (error: any) {
+    if (error.response) {
+      return [false, Error(error.response.data.message)];
+    }
+  }
+  return [false, Error("Unknown error")];
+}

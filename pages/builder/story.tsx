@@ -1,6 +1,7 @@
 // react/next imports
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useEffect } from "react";
 import useSWR from "swr";
 // model imports
 import { APIZoneResponse, IZone, IZoneResponse } from "../../models/zone";
@@ -11,6 +12,8 @@ import {
   getStoriesInZone,
   getStory,
   addStory,
+  updateStory,
+  deleteStory,
 } from "../../services/storyService";
 // component imports
 import ZoneSelector from "../../components/zoneSelector";
@@ -23,11 +26,80 @@ import Form from "react-bootstrap/Form";
 import styles from "../../styles/builder.module.css";
 
 // TODO: Build Story Editor
+// maintain story object on the editor, not the parent class
+// editor has methods to save and delete story object as well as
+// modify
+// useSWR to get the object originally
+// get ID from props
 type StoryEditorProps = {
-  story: IStoryTextObject;
+  storyId: string | undefined;
+  onDelete: () => void;
 };
 function StoryEditor(props: StoryEditorProps) {
-  return <></>;
+  const storySwr = useSWR<IStoryTextObject | undefined>(
+    props.storyId,
+    getStory
+  );
+  const [storyData, setStoryData] = useState<IStoryTextObject | undefined>();
+  useEffect(() => {
+    setStoryData(storySwr.data);
+  }, [storySwr.data]);
+
+  async function onSaveStory() {
+    if (!props.storyId || !storyData) return;
+    updateStory(props.storyId, storyData);
+  }
+  async function onDeleteStory() {
+    if (!props.storyId) return;
+    deleteStory(props.storyId);
+    props.onDelete();
+  }
+
+  if (!props.storyId) return <>Select something</>;
+  if (!storySwr.data || !storyData) return <>Loading..</>;
+  return (
+    <>
+      <Form>
+        <InputGroup className="mb-3">
+          <InputGroup.Text id="basic-addon1" style={{ width: 120 }}>
+            Room Name
+          </InputGroup.Text>
+          <Form.Control
+            type="text"
+            value={storyData.name}
+            onChange={(e) => {
+              setStoryData({
+                ...storyData,
+                name: e.target.value,
+              });
+            }}
+          />
+        </InputGroup>
+        <InputGroup className="mb-3">
+          <InputGroup.Text style={{ width: 120 }}>Description</InputGroup.Text>
+          <Form.Control
+            as="textarea"
+            rows={5}
+            value={storyData.description}
+            onChange={(e) => {
+              setStoryData({
+                ...storyData,
+                description: e.target.value,
+              });
+            }}
+          />
+        </InputGroup>
+      </Form>
+      <div className={styles.ButtonGroup}>
+        <Button variant="primary" type="button" onClick={onSaveStory}>
+          Save
+        </Button>
+        <Button variant="danger" type="button" onClick={onDeleteStory}>
+          Delete
+        </Button>
+      </div>
+    </>
+  );
 }
 
 type StoryManagerProps = {
@@ -96,7 +168,12 @@ export default function Story() {
   ) {
     if (id) {
       setSelectedStory(await getStory(id));
+    } else {
+      setSelectedStory(undefined);
     }
+  }
+  async function updateStories() {
+    storiesSwr.mutate(getStoriesInZone(zoneId));
   }
   async function createStory(name: string) {
     const blankStory: IStoryTextObject = {
@@ -106,21 +183,36 @@ export default function Story() {
       outcomes: [],
     };
     addStory(blankStory);
-    storiesSwr.mutate(getStoriesInZone(zoneId));
+    updateStories();
   }
   return (
     <>
       {!query.zone ? (
         ZoneSelector(zones)
       ) : (
-        <div className={styles.leftPanel}>
-          <StoryManager
-            stories={stories}
-            selected={selectedStory?._id}
-            onSelect={selectStoryId}
-            onCreate={createStory}
-          />
-        </div>
+        <>
+          <div className={styles.panels}>
+            <div className={styles.leftPanel}>
+              <StoryManager
+                stories={stories}
+                selected={selectedStory?._id}
+                onSelect={selectStoryId}
+                onCreate={createStory}
+              />
+            </div>
+            <div className={styles.rightPanel}>
+              <div className={styles.rightPanelContent}>
+                <StoryEditor
+                  storyId={selectedStory?._id}
+                  onDelete={() => {
+                    selectStoryId();
+                    updateStories();
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </>
   );
