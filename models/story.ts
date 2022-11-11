@@ -1,6 +1,17 @@
 import { Schema, model, models } from "mongoose";
-import { z } from "zod";
+import { string, z } from "zod";
 import { IObject } from "./object";
+import { storyCategory } from "./enum";
+
+export interface IStoryContect {
+  actor: IActorDetails;
+  subject: IActorDetails;
+}
+export interface IActorDetails {
+  name: string;
+  gender: string; // make this an enum later/ add validation and model for mobs... mono repo
+  object: string;
+}
 
 export interface IStoryText {
   actor_message: string;
@@ -8,11 +19,12 @@ export interface IStoryText {
   room_message: string;
 }
 
-export interface IStoryOutcome {
+export interface IStoryOutcome extends IObject {
   weight: number;
   story_text: IStoryText;
   category: string;
   _id: string;
+  name: string;
 }
 
 export interface IStoryTextObject extends IObject {
@@ -29,13 +41,14 @@ const storyTextSchema = new Schema<IStoryTextObject>({
   zone: Schema.Types.ObjectId,
   outcomes: [
     {
+      name: String,
+      _id: Schema.Types.ObjectId,
       weight: Number,
       category: String,
       story_text: {
         actor_message: String,
         subject_message: String,
         room_message: String,
-        _id: Schema.Types.ObjectId,
       },
     },
   ],
@@ -53,22 +66,24 @@ export const zStoryTextSchema = z.object({
   zone: z.string().length(24),
   outcomes: z.array(
     z.object({
+      _id: z.string(),
+      name: z.string(),
       weight: z.number().nonnegative(),
       category: z.enum([
-        "Crit",
-        "Hit",
-        "Miss",
-        "Dodge",
-        "Parry",
-        "Block",
-        "Armor",
-        "SpellBlock",
+        storyCategory.None,
+        storyCategory.Crit,
+        storyCategory.Hit,
+        storyCategory.Miss,
+        storyCategory.Dodge,
+        storyCategory.Parry,
+        storyCategory.Block,
+        storyCategory.Armor,
+        storyCategory.SpellBlock,
       ]),
       story_text: z.object({
         actor_message: z.string(),
         subject_message: z.string(),
         room_message: z.string(),
-        _id: z.string().length(24),
       }),
     })
   ),

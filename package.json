@@ -16,6 +16,7 @@
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.2.0",
     "bootstrap-icons": "^1.9.1",
+    "bson": "^4.7.0",
     "mongoose": "^6.5.4",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",

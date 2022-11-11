@@ -16,7 +16,6 @@
   height: calc(100vh - 100px);
 }
 .rightPanelContent {
-  overflow-y: scroll;
   height: 100%;
 }
 .objectList {
@@ -26,7 +25,25 @@
   padding: 0px;
 }
 
+.objectListMini {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: calc(100vh - 450px);
+  min-height: 100px;
+  padding: 0px;
+}
 .panels {
   display: flex;
   flex-wrap: nowrap;
+}
+
+.splitPanel {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.splitPanelColumn {
+  width: 100%;
+  margin-right: 15px;
+  height: calc(100vh);
 }

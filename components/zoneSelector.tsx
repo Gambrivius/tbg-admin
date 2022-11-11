@@ -1,6 +1,7 @@
 import Table from "react-bootstrap/Table";
 import { IZone } from "../models/zone";
-export default function SelectZone(zones: IZone[]) {
+
+export default function ZoneSelector(zones: IZone[]) {
   return (
     <>
       <h4>Please select a zone to build:</h4>
