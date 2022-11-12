@@ -1,0 +1,49 @@
+.mob {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 0px;
+  padding-right: 15px;
+  margin: 0px;
+}
+
+.mobs {
+  display: flex;
+  align-items: flex-start;
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+.outputContainer {
+  border: solid 1px #000000;
+  box-shadow: 5px 5px 7px #000000;
+  border-radius: 12px;
+  margin-bottom: 50px;
+  background-color: #222222;
+  overflow-wrap: break-word;
+}
+
+.output {
+  color: rgb(9, 202, 9);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 20pt;
+  text-align: left;
+  padding: 10px;
+  text-shadow: 1px 1px #000000;
+}
+.outputPov {
+  color: #af2b19;
+  padding-right: 15px;
+  font-weight: bold;
+  text-shadow: 2px 2px 3px #000000;
+}
+
+.mob {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 0px;
+  padding-right: 15px;
+  margin: 0px;
+}
